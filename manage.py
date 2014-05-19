@@ -1,7 +1,7 @@
 #!env/bin/python
 from flask.ext.script import Manager, Shell, Server
 from flask.ext.migrate import MigrateCommand
-from roadtrip import app, migrate
+from footnote import app, migrate
 
 manager = Manager(app)
 manager.add_command("runserver", Server())

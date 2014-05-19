@@ -1,4 +1,4 @@
 #!env/bin/python
-from roadtrip import db
+from footnote import db
 
 db.create_all()
