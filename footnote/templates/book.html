@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/book.css') }}">
+{% endblock %}
+{% block js %}{% endblock %}
+{% block content %}
+  {% include 'annotate_bar.html' %}
+  {{ book_html|safe }}
+  <script type="text/javascript">
+    $("#annotate").click(annotate);
+    function annotate(){
+      //Todo, deal with IE differences with selection. See http://www.quirksmode.org/dom/range_intro.html
+      if (window.getSelection) {
+        var selection = window.getSelection();
+        var text = selection.toString();
+        var range = selection.getRangeAt(0);
+        var startIndex = range.startOffset;
+        var startNodeIndex = $(range.startContainer.parentNode).index();
+        var endIndex = range.endOffset;
+        var endNodeIndex =$(range.endContainer.parentNode).index();
+      }
+    }
+  </script>
+{% endblock %}
