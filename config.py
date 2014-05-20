@@ -10,4 +10,4 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 #Directory for books
-BOOK_DIR = os.path.join(basedir, 'footnote', 'books')
+BOOK_DIR = os.path.join(basedir, 'books')

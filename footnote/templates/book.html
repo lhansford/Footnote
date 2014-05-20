@@ -5,20 +5,77 @@
 {% block js %}{% endblock %}
 {% block content %}
   {% include 'annotate_bar.html' %}
-  {{ book_html|safe }}
+  <div class="book">
+    {{ book.html|safe }}
+  </div>
   <script type="text/javascript">
-    $("#annotate").click(annotate);
-    function annotate(){
-      //Todo, deal with IE differences with selection. See http://www.quirksmode.org/dom/range_intro.html
-      if (window.getSelection) {
-        var selection = window.getSelection();
-        var text = selection.toString();
-        var range = selection.getRangeAt(0);
-        var startIndex = range.startOffset;
-        var startNodeIndex = $(range.startContainer.parentNode).index();
-        var endIndex = range.endOffset;
-        var endNodeIndex =$(range.endContainer.parentNode).index();
-      }
-    }
+
+    // $("#annotate").click(annotate);
+    // var annotations = {{ annotations | tojson }};
+    // createAnnotations(annotations);
+    // console.log(annotations);
+
+    // function createAnnotations(annotations){
+    //   var startSpan = "<span class='annotation'>";
+    //   var endSpan = "</span>";
+    //   var elements = document.querySelectorAll('.book > *');
+      
+    //   for(var i = 0; i < annotations.length; i++){
+    //     var startContainer = $(elements[annotations[i].start_container]);
+    //     var startIndex = annotations[i].start_index;
+    //     var endContainer = $(elements[annotations[i].end_container]);
+    //     var endIndex = annotations[i].end_index;
+        
+    //     if (annotations[i].start_container == annotations[i].end_container) {
+    //       console.log(annotations[i].annotated_text);
+    //       var text = startContainer.html();
+    //       var newText = text.substring(0, startIndex) + startSpan + text.substring(startIndex, endIndex) + endSpan + text.substring(endIndex);
+    //       startContainer.html(newText);
+    //     }else{
+
+    //     }
+    //   }
+    // }
+
+    // function annotate(){
+    //   var annotation = getUserSelection();
+    //   //CREATE ANNOTATION HERE AND ADD TO JSON
+    //   annotation.annotation = "This is an annotation!";
+    //   postAnnotation(annotation);
+    // }
+
+    // function getUserSelection(){
+    //   //Gets the details of the current selection and returns them as JSON.
+    //   //TODO, deal with IE differences with selection. See http://www.quirksmode.org/dom/range_intro.html
+    //   if (window.getSelection) {
+    //     var selection = window.getSelection();
+    //     var text = selection.toString();
+    //     var range = selection.getRangeAt(0);
+    //     var startIndex = range.startOffset;
+    //     var startNodeIndex = $(range.startContainer.parentNode).index();
+    //     var endIndex = range.endOffset;
+    //     var endNodeIndex =$(range.endContainer.parentNode).index();
+    //   }
+    //   var annotation = {
+    //     'text':text,
+    //     'startIndex':startIndex,
+    //     'endIndex':endIndex,
+    //     'startContainer':startNodeIndex,
+    //     'endContainer':endNodeIndex,
+    //   };
+    //   return annotation;
+    // }
+
+    // function postAnnotation(annotation){
+    //   $.ajax({
+    //     type: "POST",
+    //     url: '/book/' + {{ book_id }} + '/annotate',
+    //     dataType: 'json',
+    //     async: false,
+    //     data: JSON.stringify(annotation),
+    //     contentType: "application/json; charset=utf-8",
+    //   });
+    // }
+
   </script>
 {% endblock %}
