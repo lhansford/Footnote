@@ -29,17 +29,33 @@ def annotate(book_id):
 	"""
 	data = request.get_json()
 	annotation = Annotation(
-		annotation = data['annotation'],
+		# annotation = data['annotation'],
 		annotated_text = data['text'],
-		start_index= data['startIndex'],
-		end_index = data['endIndex'],
-		start_container = data['startContainer'],
-		end_container = data['endContainer'],
+		# start_index= data['startIndex'],
+		# end_index = data['endIndex'],
+		# start_container = data['startContainer'],
+		# end_container = data['endContainer'],
 		book = Book.query.get(book_id)
 	)
 	db.session.add(annotation)
 	db.session.commit()
 	return jsonify(annotation.to_dict())
+
+@app.route('/book/<int:book_id>/post', methods=['POST'])
+def post_html(book_id):
+	""" Receives a JSON containing the new HTML for a book.
+	"""
+	data = request.get_json()
+	book = Book.query.get(book_id)
+	book.html = data['html']
+	db.session.commit()
+	return jsonify("")
+
+@app.route('/book/<int:book_id>/annotations')
+def get_annotations(book_id):
+	book = Book.query.get(book_id)
+	annotations = [a.to_dict() for a in Annotation.query.filter_by(book=book).order_by(-Annotation.start_container, -Annotation.start_index).all()]
+	return jsonify(annotations)
 
 def get_html(book_id):
 	""" Returns the HTML representation of a book. """

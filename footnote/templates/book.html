@@ -10,17 +10,15 @@
   </div>
   <script type="text/javascript">
 
-    // $("#annotate").click(annotate);
-    // var annotations = {{ annotations | tojson }};
-    // createAnnotations(annotations);
-    // console.log(annotations);
+    $("#annotate").click(annotate);
+    // createAnnotations({{ annotations | tojson }});
 
     // function createAnnotations(annotations){
     //   var startSpan = "<span class='annotation'>";
     //   var endSpan = "</span>";
     //   var elements = document.querySelectorAll('.book > *');
-      
     //   for(var i = 0; i < annotations.length; i++){
+    //     console.log(annotations[i]);
     //     var startContainer = $(elements[annotations[i].start_container]);
     //     var startIndex = annotations[i].start_index;
     //     var endContainer = $(elements[annotations[i].end_container]);
@@ -29,7 +27,9 @@
     //     if (annotations[i].start_container == annotations[i].end_container) {
     //       console.log(annotations[i].annotated_text);
     //       var text = startContainer.html();
+    //       console.log(text);
     //       var newText = text.substring(0, startIndex) + startSpan + text.substring(startIndex, endIndex) + endSpan + text.substring(endIndex);
+    //       console.log(newText);
     //       startContainer.html(newText);
     //     }else{
 
@@ -37,16 +37,26 @@
     //   }
     // }
 
-    // function annotate(){
-    //   var annotation = getUserSelection();
-    //   //CREATE ANNOTATION HERE AND ADD TO JSON
-    //   annotation.annotation = "This is an annotation!";
-    //   postAnnotation(annotation);
+    function annotate(){
+      postAnnotation(window.getSelection().toString());
+
+      // var annotation = getUserSelection();
+      // console.log(annotation);
+      //CREATE ANNOTATION HERE AND ADD TO JSON
+      // annotation.annotation = "This is an annotation!";
+      // var annotationId = postAnnotation(annotation);
+      // createAnnotation(annotation, annotationId);
+    }
+
+    // function removeAnnotations(){
+    // 	//Remove all annotation spans from the DOM in order to get the correct index.
+    // 	$('.annotation').remove();
     // }
 
     // function getUserSelection(){
     //   //Gets the details of the current selection and returns them as JSON.
     //   //TODO, deal with IE differences with selection. See http://www.quirksmode.org/dom/range_intro.html
+    //   removeAnnotations();
     //   if (window.getSelection) {
     //     var selection = window.getSelection();
     //     var text = selection.toString();
@@ -66,16 +76,41 @@
     //   return annotation;
     // }
 
-    // function postAnnotation(annotation){
-    //   $.ajax({
-    //     type: "POST",
-    //     url: '/book/' + {{ book_id }} + '/annotate',
-    //     dataType: 'json',
-    //     async: false,
-    //     data: JSON.stringify(annotation),
-    //     contentType: "application/json; charset=utf-8",
-    //   });
-    // }
+    function postAnnotation(annotationText){
+      $.ajax({
+        type: "POST",
+        url: '/book/' + {{ book.id }} + '/annotate',
+        dataType: 'json',
+        async: false,
+        data: JSON.stringify({'text':annotationText}),
+        contentType: "application/json; charset=utf-8",
+      }).done(function( annotation ) {
+        var selectionRange = window.getSelection().getRangeAt(0);
+        var annotationSpan = document.createElement("span");
+        annotationSpan.className = "annotation";
+        annotationSpan.id = annotation.id;
+        selectionRange.surroundContents(annotationSpan);
+        postHtml();
+		  });
+    }
+
+    function postHtml(){
+       $.ajax({
+        type: "POST",
+        url: '/book/' + {{ book.id }} + '/post',
+        dataType: 'json',
+        async: false,
+        data: JSON.stringify({'html':$('.book').html()}),
+        contentType: "application/json; charset=utf-8",
+      });
+    }
+
+   //  function getAnnotations(){
+   //  	var url = '/book/' + {{ book.id }} + '/annotations';
+   //  	$.getJSON(url, function (data){ 
+   //  		createAnnotations(data);
+			// });
+   //  }
 
   </script>
 {% endblock %}

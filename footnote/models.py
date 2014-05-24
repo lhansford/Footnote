@@ -24,6 +24,7 @@ class Annotation(db.Model):
 	def to_dict(self):
 		"""Returns a dictionary representation of the Annotation object."""
 		annotation = {
+			'id':self.id,
 			'annotation':self.annotation,
 			'annotated_text':self.annotated_text,
 			'start_index':self.start_index,
