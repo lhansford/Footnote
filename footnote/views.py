@@ -8,7 +8,17 @@ from .models import Book, Annotation
 
 @app.route('/')
 def index():
-	return "hello"
+	books = {}
+	for book in Book.query.all():
+		if book.author in books.keys():
+			books[book.author].append(book)
+		else:
+			books[book.author] = [book]
+
+	return render_template("index.html",
+		books = books,
+		title = "Footnote",
+	)
 
 @app.route('/book/<int:book_id>')
 @app.route('/book/<int:book_id>/')

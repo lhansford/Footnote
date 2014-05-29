@@ -1,7 +1,7 @@
 import os
 
 from footnote import app, db
-from footnote.models import Book
+from footnote.models import Book, Author
 
 def add_books():
 	directory = app.config['BOOK_DIR']
@@ -24,7 +24,20 @@ def add_books():
 		title_start = html.find("Title:")
 		title_end = html.find("\n", title_start)
 		book.title = html[title_start+6:title_end].strip()
+		author_start = html.find("Author:")
+		author_end = html.find("\n", author_start)
+		author_name = html[author_start+7:author_end].strip()
+		book.author = get_author(author_name)
 		db.session.add(book)
 		db.session.commit()
+
+def get_author(name):
+	author = Author.query.filter_by(name=name).first()
+	if(not author):
+		author = Author(name=name)
+		db.session.add(author)
+		db.session.commit()
+	return author
+
 
 add_books()

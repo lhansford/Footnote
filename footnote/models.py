@@ -8,6 +8,8 @@ class Book(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String(255))
 	html = db.Column(db.Text)
+	author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
+	author = db.relationship('Author', backref=db.backref('books', lazy='dynamic'))
 
 class Annotation(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -34,3 +36,7 @@ class Annotation(db.Model):
 			'book_id':self.book_id,
 		}
 		return annotation
+
+class Author(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(255))
