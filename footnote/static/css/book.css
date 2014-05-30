@@ -1,7 +1,4 @@
-body {
-	margin: 20px auto;
-	max-width: 75%;
-}
+body { padding-top: 70px; }
 
 .annotation {
 	background-color: yellow;

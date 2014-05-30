@@ -3,10 +3,16 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/book.css') }}">
 {% endblock %}
 {% block js %}{% endblock %}
+
+{% block contextmenu %}
+  <li><button id="annotate" type="button" class="btn btn-default">Annotate</button></li>
+{% endblock %}
+
 {% block content %}
-  {% include 'annotate_bar.html' %}
-  <div class="book">
-    {{ book.html|safe }}
+  <div class="container">
+    <div class="book">
+      {{ book.html|safe }}
+    </div>
   </div>
   <script type="text/javascript">
 

@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-	{% for author in books.keys() %}
-		<h3>{{ author.name }}</h3>
-		<ul>
-			{% for book in books[author] %}
-				<li><a href="{{ url_for('book', book_id=book.id) }}">{{ book.title }}</a></li>
-			{% endfor %}
-		</ul>
-	{% endfor %}
+	<div class="container">
+		{% for author in books.keys() %}
+			<h3>{{ author.name }}</h3>
+			<ul>
+				{% for book in books[author] %}
+					<li><a href="{{ url_for('book', book_id=book.id) }}">{{ book.title }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+	</div>
 {% endblock %}
