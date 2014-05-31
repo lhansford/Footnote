@@ -29,10 +29,10 @@ class Annotation(db.Model):
 			'id':self.id,
 			'annotation':self.annotation,
 			'annotated_text':self.annotated_text,
-			'start_index':self.start_index,
-			'end_index':self.end_index,
-			'start_container':self.start_container,
-			'end_container':self.end_container,
+			# 'start_index':self.start_index,
+			# 'end_index':self.end_index,
+			# 'start_container':self.start_container,
+			# 'end_container':self.end_container,
 			'book_id':self.book_id,
 		}
 		return annotation

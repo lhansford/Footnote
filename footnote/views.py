@@ -39,7 +39,7 @@ def annotate(book_id):
 	"""
 	data = request.get_json()
 	annotation = Annotation(
-		# annotation = data['annotation'],
+		annotation = data['annotation'],
 		annotated_text = data['text'],
 		# start_index= data['startIndex'],
 		# end_index = data['endIndex'],

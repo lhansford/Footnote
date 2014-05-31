@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 {% block css %}
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/book.css') }}">
 {% endblock %}
 {% block js %}{% endblock %}
 
 {% block contextmenu %}
-  <li><button id="annotate" type="button" class="btn btn-default">Annotate</button></li>
+  <li><button id="annotate" type="button" class="btn btn-default" data-toggle="modal" data-target="#annotationModal">Annotate</button></li>
 {% endblock %}
 
 {% block content %}
@@ -14,9 +13,39 @@
       {{ book.html|safe }}
     </div>
   </div>
+
+  <div class="modal fade" id="annotationModal" tabindex="-1" role="dialog" aria-labelledby="annotationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">New Annotation</h4>
+      </div>
+      <div class="modal-body">
+        <p id="annotation-text"></p>
+        <form role="form">
+          <div class="form-group">
+            <label for="annotationTextarea">Annotation</label>
+            <textarea class="form-control" id="annotationTextarea" placeholder="Enter annotation"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="save">Save annotation</button>
+      </div>
+    </div>
+  </div>
+</div>
   <script type="text/javascript">
 
+    var annotations = {{ annotations|safe }};
+
     $("#annotate").click(annotate);
+    $("#save").click(saveAnnotation);
+    createPopovers();
+    var selectionString;
+    var selectionRange;
     // createAnnotations({{ annotations | tojson }});
 
     // function createAnnotations(annotations){
@@ -44,7 +73,9 @@
     // }
 
     function annotate(){
-      postAnnotation(window.getSelection().toString());
+      selectionString = window.getSelection().toString();
+      selectionRange = window.getSelection().getRangeAt(0);
+      // postAnnotation(.toString());
 
       // var annotation = getUserSelection();
       // console.log(annotation);
@@ -52,6 +83,10 @@
       // annotation.annotation = "This is an annotation!";
       // var annotationId = postAnnotation(annotation);
       // createAnnotation(annotation, annotationId);
+    }
+
+    function saveAnnotation(){
+      postAnnotation($("#annotationTextarea").val());
     }
 
     // function removeAnnotations(){
@@ -82,20 +117,20 @@
     //   return annotation;
     // }
 
-    function postAnnotation(annotationText){
+    function postAnnotation(annotation){
       $.ajax({
         type: "POST",
         url: '/book/' + {{ book.id }} + '/annotate',
         dataType: 'json',
         async: false,
-        data: JSON.stringify({'text':annotationText}),
+        data: JSON.stringify({'text':selectionString,'annotation':annotation}),
         contentType: "application/json; charset=utf-8",
       }).done(function( annotation ) {
-        var selectionRange = window.getSelection().getRangeAt(0);
         var annotationSpan = document.createElement("span");
         annotationSpan.className = "annotation";
         annotationSpan.id = annotation.id;
         selectionRange.surroundContents(annotationSpan);
+        $("#annotationModal").modal('hide');
         postHtml();
 		  });
     }
@@ -111,6 +146,18 @@
       });
     }
 
+    function createPopovers(){
+      console.log(annotations.length);
+      for (var i = 0; i < annotations.length; i++){
+        console.log(annotations[i]);
+        $("#" + annotations[i].id).popover({
+          "content":annotations[i].annotation,
+          "trigger":"hover",
+          "placement":"auto top",
+          "title":annotations[i].annotated_text,
+        });
+      }
+    }
    //  function getAnnotations(){
    //  	var url = '/book/' + {{ book.id }} + '/annotations';
    //  	$.getJSON(url, function (data){ 
